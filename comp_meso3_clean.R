@@ -712,6 +712,21 @@ fig4 <- ggplot(ind_results, aes(x = order, y = date, color = sync, fill = sync))
   ylab('date of emergence') + xlab('mean arrival (relative to Rana)') + 
   coord_flip()
 
+###---TREATMENT GRID-----------------------------------------
+###---EMPTY GRID FOR TRT PRESENTATION------------------------
+
+## Empty plot for showing factorial treatment design
+## Could consider putting in toy data, or just add distributions in powerpoint/inkscape
+
+#means_compiled$order <- factor(means_compiled$order, levels = c('cont', 'early', 'same', 'late'))
+View(trt_means)
+trt_grid <- ggplot(trt_means, x = order, y = se) + theme_bw() +
+  facet_grid(sync ~ order) +
+  xlab("date") + ylab('number hatching') + 
+  theme(strip.text = element_text(size = 16),
+        axis.title = element_text(size = 18))
+trt_grid
+
 ####---MS FIGURES---####
 
 ## SUPPLEMENT - TREATMENT MEANS, ABSOLUTE 
@@ -774,6 +789,7 @@ fig4
 
 ## Comparing model using numeric vs. unordered factor vs. ordered factor independent variable
 # https://stackoverflow.com/questions/25735636/interpretation-of-ordered-and-non-ordered-factors-vs-numerical-predictors-in-m
+
 
 #############################################################
 ###--------------------ABSOLUTE MODELS--------------------###
@@ -1123,6 +1139,7 @@ plot(res_mrana3)
 qqnorm(res_mrana3)
 qqline(res_mrana3)
 
+
 #############################################################
 ###--------------------RELATIVE MODELS--------------------###
 #############################################################
@@ -1262,24 +1279,6 @@ qqnorm(res_memsd_rel4)
 qqline(res_memsd_rel4)
 plot(predict(memsd_rel4), tank_results_contadj$emsd_adj, xlim = c(0, 40), ylim = c(0, 40))
 abline(a = 0, b = 1) # not horrible
-
-#############################################################
-###------------------MULTIPLE COMPARISONS-----------------###
-#############################################################
-
-###---SURVIVAL (HYLA)----------------------------------------
-### MULTIPLE COMPARISONS ###
-# either can make trt explanatory varialbe...
-msurv_trt <- glmer(data = survivors_nocontrol, cbind(no_metas, 45 - no_metas) ~ trt + (1 | block), na.action = na.omit, family = 'binomial')
-comps_trt <- glht(msurv_trt, mcp(trt = 'Tukey'))
-summary(comps_trt)
-
-# or do 2x post hoc comparisons for each explanatory variable
-# getting error messages here though
-comps_sync <- glht(msurv, mcp(sync = 'Tukey'))
-comps_order <- glht(msurv, mcp(order = 'Tukey'))
-summary(comps_sync)
-summary(comps_order)
 
 
 #############################################################
@@ -1432,6 +1431,7 @@ emer_predictxactual # sexy af
 
 
 
+
 #############################################################
 #############################################################
 ###----------------------EXTRA BITS-----------------------###
@@ -1522,6 +1522,7 @@ ggplot(survivors_nocontrol, aes(x = order, y = prop_surv, color = sync)) +
   geom_ribbon(data = newdatatrt, aes(ymin = LCI, ymax = HCI, fill = sync), alpha = 0.2) +
   geom_line(data = newdatatrt, aes(x = order, y = prop_surv, color = sync), size = 2) + 
   theme_bw()
+
 ###---MODELLING EMER C.V. (ABANDONED FOR S.D.)---------------
 
 qqp(surv_contadj$emercv_adj, 'norm') # looks pretty normal
@@ -1582,6 +1583,7 @@ qqnorm(res_memercv_rel4)
 qqline(res_memercv_rel4)
 plot(predict(memercv_rel4), surv_contadj$emercv_adj, xlim = c(-0.2, 0.4), ylim = c(-0.2, 0.4))
 abline(a = 0, b = 1) # not horrible
+
 
 
 #############################################################
@@ -2282,18 +2284,6 @@ emer_mean_trt <- ggplot(subset(means_compiled, subset = (order != 'cont' & varia
   theme(legend.position = 'none')
 emer_mean_trt
 
-###---EMPTY GRID FOR TRT PRESENTATION------------------------
-
-## Empty plot for showing factorial treatment design
-#means_compiled$order <- factor(means_compiled$order, levels = c('cont', 'early', 'same', 'late'))
-
-trt_grid <- ggplot(means_compiled, x = order, y = se) + theme_bw() +
-  facet_grid(sync ~ order) +
-  xlab("date") + ylab('number hatching') + 
-  theme(strip.text = element_text(size = 16),
-        axis.title = element_text(size = 18))
-trt_grid
-
 ###---COMMITTEE MEETING FIGURES------------------------------
 
 ## Controls only
@@ -2366,276 +2356,3 @@ cont_emer <- ggplot(subset(means_compiled, subset = (order == 'cont' & variable 
   xlab('hatching synchrony') + ylab("days to emergence")
 cont_emer
 grid.arrange(cont_surv, cont_biom, cont_mass, cont_emer)
-###---SCIENCE DAY FIGURES------------------------------------
-
-### CONTROLS ###
-
-## Survival
-cont_surv_sd <- ggplot(subset(means_compiled, subset = (order == 'cont' & variable == "surv")), 
-                       aes(x = sync, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  #geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("proportion survival") + 
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  theme(legend.position = c(0.2, 0.2),
-        legend.text = element_text(size = 14),
-        legend.key.height = unit(1.5, 'line'),
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        axis.text.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-cont_surv_sd
-
-## Mass
-cont_mass_sd <- ggplot(subset(means_compiled, subset = (order == 'cont' & variable == "mass")), 
-                       aes(x = sync, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  #geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("mass at emergence (mg)") + xlab('hatching synchrony') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        axis.text.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) + 
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Emergence mean
-cont_emer_sd <- ggplot(subset(means_compiled, subset = (order == 'cont' & variable == "emer")), 
-                       aes(x = sync,  y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  #geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("days to emerge") + xlab('hatching synchrony') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        axis.text.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) + 
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-cont_emer_sd
-
-## Emergence variance
-cont_emercv_sd <- ggplot(subset(means_compiled, subset = (order == 'cont' & variable == "emer_cv")), 
-                         aes(x = sync, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  #geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("days to emergence, c.v.") + xlab('hatching synchrony') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Control plots, grouped
-## 1100x475
-plot_grid(cont_surv_sd, cont_mass_sd, cont_emer_sd,
-          nrow = 1)
-
-### TREATMENTS, ABSOLUTE ###
-
-## Survival
-surv_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "surv")), 
-                  aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0.58, size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = 0.69, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 0.62, size = 1, linetype = 'dashed', color = "#016c59") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("proportion survival") + xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = c(0.1, 0.2),
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Mass
-mass_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "mass")), 
-                  aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = (236.5), size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = (197.4), size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = (177.2), size = 1, linetype = 'dashed', color = "#016c59") +
-  
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("mass at emergence (mg)") + xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  #labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Emergence mean
-emer_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "emer")), 
-                  aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 33.4, size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = 43.8, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 55.8, size = 1, linetype = 'dashed', color = "#016c59") +
-  
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("days to emerge, mean") + xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  #labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Emergence variation
-emercv_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "emer_cv")), 
-                    aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0.308, size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = 0.385, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 0.255, size = 1, linetype = 'dashed', color = "#016c59") +
-  
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab("days to emerge, c.v.") + xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  #labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Treatment plots, grouped
-plot_grid(surv_sd, mass_sd, emer_sd,
-          nrow = 1)
-
-### TREATMENTS, RELATIVE ###
-
-## Survival
-surv_rel_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "surv")), 
-                      aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab(expression(paste("proportion survival (", Delta, " control)"))) + 
-  xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = c(0.1, 0.2),
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Mass
-mass_rel_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "mass")), 
-                      aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab(expression(paste("mass at emergence (", Delta, " control)"))) + 
-  xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Emergence, mean
-emer_rel_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "emer")), 
-                      aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab(expression(paste("days to emerge (", Delta, " control)"))) + 
-  xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Emergence, variance
-emercv_rel_sd <- ggplot(subset(means_compiled, subset = (order != 'cont' & variable == "emer_cv")), 
-                        aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 6, position = position_dodge(width = 0.2)) +
-  ylab(expression(paste("days to emerge, c.v. (", Delta, " control)"))) + 
-  xlab('mean Hyla arrival\n(relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 18),
-        axis.text  = element_text(size = 16),
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        strip.text = element_text(size = 9)) +  
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
-  #ylim(c(0.2, 0.8)) +
-  scale_shape_manual(values = c(21, 24, 23)) 
-
-## Relative treatment plots, gathered
-plot_grid(surv_rel_sd, mass_rel_sd, emer_rel_sd,
-          nrow = 1)
-
