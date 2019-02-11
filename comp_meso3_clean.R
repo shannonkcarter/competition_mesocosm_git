@@ -245,7 +245,6 @@ tank_results$order <- factor(tank_results$order, levels = c('early', 'same', 'la
 trt_means$sync  <- factor(trt_means$sync, levels = c("low", "med", "high"))
 trt_means$order <- factor(trt_means$order, levels = c('early', 'same', 'late', 'cont'))
 
-
 #############################################################
 #############################################################
 ###-------------------------PLOTS-------------------------###
@@ -260,23 +259,24 @@ Anova(msurv_rel)
 
 ### RAW MEANS ###
 surv_means <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != 'cont')),
-                     aes(x = order, y = mean, group = sync, fill = sync, shape = sync)) + mytheme +
-  geom_hline(yintercept = 0.58, size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = 0.69, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 0.62, size = 1, linetype = 'dashed', color = "#016c59") +
+                     aes(x = order, y = mean, group = sync, fill = sync, color = sync, shape = sync)) + mytheme +
+  geom_hline(yintercept = 0.58, size = 1, linetype = 'dashed', color = "#fbb973") +
+  geom_hline(yintercept = 0.69, size = 1, linetype = 'dashed', color = "#f96968") +
+  geom_hline(yintercept = 0.62, size = 1, linetype = 'dashed', color = "#4b1d1d") +
   #geom_point(data = survivors_nocontrol, aes(x = order, y = prop_surv, group = sync, fill = sync, shape = sync),
   #           position = position_dodge(width = 0.1)) + 
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
+  geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
   geom_point(size = 5, position = position_dodge(width = 0.2)) +
   ylab('proportion survival') +
-  xlab(NULL) + 
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
+  xlab('mean Hyla hatching (relative to Rana)') +
+  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony', color = "hatching\nsynchrony") +
   theme(legend.position = c(0.1, 0.22),
         axis.title = element_text(size = 12),
         axis.text  = element_text(size = 10)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) +
+  scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+  scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))  
 
 ### MEANS RELATIVE TO CONTROL ###
@@ -329,21 +329,23 @@ Anova(mbiom_rel)
 
 ### RAW MEANS ###
 biom_means <- ggplot(subset(trt_means, subset = (variable == 'biom' & order != 'cont')), 
-                     aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
+                     aes(x = order, y = mean, color = sync, shape = sync, fill = sync, group = sync)) + mytheme +
   #geom_point(data = subset(survivors, subset = (order != 'cont')), aes(x = order, y = biomass, fill = sync, shape = sync),
   #           position = position_dodge(width = 0.1)) + 
-  geom_hline(yintercept = 6127, size = 1, linetype = 'longdash', color = "#bdc9e1") +
-  geom_hline(yintercept = 6103, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 5035, size = 1, linetype = 'dashed', color = "#016c59") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
+  geom_hline(yintercept = 6127, size = 1, linetype = 'longdash', color = "#fbb973") +
+  geom_hline(yintercept = 6103, size = 1, linetype = 'dashed', color = "#f96968") +
+  geom_hline(yintercept = 5035, size = 1, linetype = 'dashed', color = "#4b1d1d") +
+  geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
   geom_point(size = 5, position = position_dodge(width = 0.2)) +
-  ylab("total biomass export (mg)") + xlab(NULL) +
+  ylab("total biomass export (mg)") + 
+  xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
         axis.title = element_text(size = 12),
         axis.text  = element_text(size = 10)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
+  scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+  scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))
 
 ### MEANS RELATIVE TO CONTROL ###
@@ -374,21 +376,21 @@ Anova(mmass_rel)
 
 ### RAW MEANS ###
 mass_means <- ggplot(subset(trt_means, subset = (variable == 'mass' & order != 'cont')), 
-                     aes(x = order, y = log(mean), group = sync, fill = sync, shape = sync)) + mytheme +
-  geom_hline(yintercept = log(236.5), size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = log(197.4), size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = log(177.2), size = 1, linetype = 'dashed', color = "#016c59") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
+                     aes(x = order, y = log(mean), color = sync, group = sync, fill = sync, shape = sync)) + mytheme +
+  geom_hline(yintercept = log(236.5), size = 1, linetype = 'dashed', color = "#fbb973") +
+  geom_hline(yintercept = log(197.4), size = 1, linetype = 'dashed', color = "#f96968") +
+  geom_hline(yintercept = log(177.2), size = 1, linetype = 'dashed', color = "#4b1d1d") +
+  geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = log(mean - se), ymax = log(mean + se), width = 0)) +
   geom_point(size = 5, position = position_dodge(width = 0.2)) +
   ylab("log per capita mass (mg)") + 
-  xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  #xlab(expression(paste('mean ',  italic(' H. versicolor'),' arrival (relative to',  italic(' R. sphenocephala'),")"))) +
+  xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
         axis.title = element_text(size = 12),
         axis.text  = element_text(size = 10)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
+  scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+  scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))
 
 ### MEANS RELATIVE TO CONTROL ###
@@ -419,19 +421,21 @@ Anova(memer_rel)
 
 ### RAW MEANS ###
 emer_means <- ggplot(subset(trt_means, subset = (variable == 'emer' & order != 'cont')), 
-                     aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 33.4, size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = 43.8, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 55.8, size = 1, linetype = 'dashed', color = "#016c59") +
+                     aes(x = order, y = mean, color = sync, shape = sync, fill = sync, group = sync)) + mytheme +
+  geom_hline(yintercept = 33.4, size = 1, linetype = 'dashed', color = "#fbb973") +
+  geom_hline(yintercept = 43.8, size = 1, linetype = 'dashed', color = "#f96968") +
+  geom_hline(yintercept = 55.8, size = 1, linetype = 'dashed', color = "#4b1d1d") +
   geom_line(size = 0.7, position = position_dodge(width = 0.1)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
   geom_point(size = 5, position = position_dodge(width = 0.1)) +
-  ylab("days to emergence") + xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
+  ylab("days to emergence") + 
+  xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
         axis.title = element_text(size = 12),
         axis.text  = element_text(size = 10)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
+  scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+  scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))
 
 ### MEANS RELATIVE TO CONTROL ###
@@ -466,20 +470,21 @@ memersd_rel4 <- lme(data = surv_contadj,
 
 ### RAW MEANS ###
 emsd_means <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order != 'cont')), 
-                        aes(x = order, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 10.3, size = 1, linetype = 'dashed', color = "#bdc9e1") +
-  geom_hline(yintercept = 16.88, size = 1, linetype = 'dashed', color = "#67a9cf") +
-  geom_hline(yintercept = 15.11, size = 1, linetype = 'dashed', color = "#016c59") +
-  geom_line(size = 1, position = position_dodge(width = 0.2)) +
+                        aes(x = order, y = mean, color = sync, shape = sync, fill = sync, group = sync)) + mytheme +
+  geom_hline(yintercept = 10.3, size = 1, linetype = 'dashed', color = "#fbb973") +
+  geom_hline(yintercept = 16.88, size = 1, linetype = 'dashed', color = "#f96968") +
+  geom_hline(yintercept = 15.11, size = 1, linetype = 'dashed', color = "#4b1d1d") +
+  geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
   geom_point(size = 5, position = position_dodge(width = 0.2)) +
   ylab("s.d., days to emergence") + 
-  xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
+  xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
         axis.title = element_text(size = 12),
         axis.text  = element_text(size = 10)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
+  scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+  scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))
 
 ### MEANS RELATIVE TO CONTROLS ###
@@ -539,10 +544,7 @@ m_hr <- lm(data = subset(tank_results, subset = (order != 'cont')),
 
 ###---CONTROLS FOR REL PLOT----------------------------------
 
-trt_means1 <- trt_means
-trt_means1$variable <- factor(trt_means$variable, levels = c('surv', 'biom', 'mass', 'emer', 'emsd'))
-levels(trt_means1$variable) <- c('survival', 'biomass', 'per capita mass', 'mean emergence', 's.d. emergence')
-
+## SEPARATING RESPONSE VARIABLES
 trt_means_control <- subset(trt_means, subset = (order == 'cont'))
 
 surv_cont <- ggplot(subset(trt_means_control, subset = (variable == 'surv')),
@@ -561,7 +563,6 @@ surv_cont <- ggplot(subset(trt_means_control, subset = (variable == 'surv')),
   ylim(0.4, 0.9) +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('proportion survival')
-surv_cont
 
 biom_cont <- ggplot(subset(trt_means_control, subset = (variable == 'biom')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
@@ -579,7 +580,6 @@ biom_cont <- ggplot(subset(trt_means_control, subset = (variable == 'biom')),
   ylim(3000, 7000) + 
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('total biomass export (mg)')
-biom_cont
 
 mass_cont <- ggplot(subset(trt_means_control, subset = (variable == 'mass')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
@@ -596,7 +596,6 @@ mass_cont <- ggplot(subset(trt_means_control, subset = (variable == 'mass')),
         axis.ticks.x = element_blank()) +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('per capita mass (mg)')
-mass_cont
 
 emer_cont <- ggplot(subset(trt_means_control, subset = (variable == 'emer')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
@@ -613,7 +612,6 @@ emer_cont <- ggplot(subset(trt_means_control, subset = (variable == 'emer')),
         axis.ticks.x = element_blank()) +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('mean days to emergence')
-emer_cont
 
 emsd_cont <- ggplot(subset(trt_means_control, subset = (variable == 'emsd')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
@@ -629,7 +627,12 @@ emsd_cont <- ggplot(subset(trt_means_control, subset = (variable == 'emsd')),
         axis.ticks.x = element_blank()) +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('s.d., days to emergence')
-emsd_cont
+
+## ALL TOGETHER
+
+trt_means1 <- trt_means
+trt_means1$variable <- factor(trt_means$variable, levels = c('surv', 'biom', 'mass', 'emer', 'emsd'))
+levels(trt_means1$variable) <- c('survival', 'biomass', 'per capita mass', 'mean emergence', 's.d. emergence')
 
 control_means <- ggplot(subset(trt_means1, subset = (order == 'cont')),
                         aes(x = sync, y = mean, shape = sync, fill = sync, group = sync)) + mytheme +
@@ -662,7 +665,7 @@ low_sync  <- subset(ind_results, subset = (sync == 'low'))
 emer_lava_sync <- ggplot(high_sync, aes(date, group = as.factor(block))) + mytheme +
   stat_density(size = 1.25, alpha = 0.75, adjust = 1,
                aes(ymax = ..density..,  ymin = 0),
-               fill = "#016c59", colour = "#016c59",
+               fill = "#4b1d1d", colour = "#4b1d1d",
                geom = "ribbon", position = "identity") +
   facet_grid(order ~. , scales = 'free') +
   theme(axis.ticks   = element_blank(), 
@@ -674,15 +677,16 @@ emer_lava_sync <- ggplot(high_sync, aes(date, group = as.factor(block))) + mythe
   ylab("density of emerging individuals") + xlab("date") +
   stat_density(data = low_sync, size = 1.25, alpha = 0.75, adjust = 1,
                aes(date, color = as.factor(block), fill = as.factor(block), ymax = 0, ymin = -..density..),
-               fill = "#99d8c9", colour = "#99d8c9",
+               fill = "#fbb973", colour = "#fbb973",
                geom = "ribbon", position = "identity") +
   geom_hline(yintercept = 0, size = 1)
 emer_lava_sync
 
+## POOLING REPLICATES, WES ANDERSON COLOR SCHEME
 emer_lava_sync1 <- ggplot(high_sync, aes(date)) + mytheme +
   stat_density(size = 1.25, alpha = 0.75, adjust = 1,
                aes(ymax = ..density..,  ymin = 0),
-               fill = "brown", colour = "brown",
+               fill = "#4b1d1d", colour = "#4b1d1d",
                geom = "ribbon", position = "identity") +
   facet_grid(order ~. , scales = 'free') +
   theme(axis.ticks   = element_blank(), 
@@ -694,11 +698,12 @@ emer_lava_sync1 <- ggplot(high_sync, aes(date)) + mytheme +
   ylab("density of emerging individuals") + xlab("date") +
   stat_density(data = low_sync, size = 1.25, alpha = 0.75, adjust = 1,
                aes(date, color = as.factor(block), fill = as.factor(block), ymax = 0, ymin = -..density..),
-               fill = "cream", colour = "cream",
+               fill = "#fbb973", colour = "#fbb973",
                geom = "ribbon", position = "identity") +
   geom_hline(yintercept = 0, size = 1)
 emer_lava_sync1
 
+## BOXPLOT
 fig4 <- ggplot(ind_results, aes(x = order, y = date, color = sync, fill = sync)) +
   geom_boxplot(size = 1, alpha = 0.65, position = position_dodge(0.85)) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
@@ -706,40 +711,38 @@ fig4 <- ggplot(ind_results, aes(x = order, y = date, color = sync, fill = sync))
   labs(fill = 'hatching\nsynchrony', color = 'hatching\nsynchrony') +
   ylab('date of emergence') + xlab('mean arrival (relative to Rana)') + 
   coord_flip()
-fig4
-tiff("fig4.tiff", height = 13, width = 15, units = 'cm', res = 1200)
-plot(fig4)
-dev.off()
 
-####---FIGURES---####
+####---MS FIGURES---####
 
-## RAW MEANS
-plot_grid(surv_means, biom_means, mass_means, emer_means, emsd_means, #rana_means,
-          nrow = 3, labels = c("A", "B", "C", "D", "E"))#, "F"))
+## SUPPLEMENT - TREATMENT MEANS, ABSOLUTE 
+figS1 <- plot_grid(surv_means, biom_means, mass_means, emer_means, emsd_means, #rana_means,
+          nrow = 2, labels = c("A", "B", "C", "D", "E"))#, "F"))
+#tiff("figS1.tiff", height = 22, width = 28, units = 'cm', res = 1200)
+#plot(figS1)
+#dev.off()
 
-## RELATIVE TO CONTROLS MEANS
-fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
-          nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'))
-
-tiff("fig3.tiff", height = 22, width = 28, units = 'cm', res = 1200)
-plot(fig3)
-dev.off()
-
-## CONTROL MEANS
+## FIGURE 2 - CONTROL MEANS
 fig2 <- plot_grid(surv_cont, biom_cont, mass_cont, emer_cont, emsd_cont, 
           nrow = 1, labels = c('A', 'B', 'C', 'D', 'E'),
           rel_widths = c(1, 1, 1, 1, 1.5))
 fig2
-tiff("fig2.tiff", height = 7, width = 28, units = 'cm', res = 1200)
-plot(fig2)
-dev.off()
+#tiff("fig2.tiff", height = 7, width = 28, units = 'cm', res = 1200)
+#plot(fig2)
+#dev.off()
 
-l_col <- plot_grid(surv_means_rel, mass_means_rel, emsd_means_rel,
-                      nrow = 3, labels = c('A', 'C', 'E'))
+## FIGURE 3 - TREATMENT MEANS, RELATIVE TO CONTROLS
+fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
+          nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'))
+fig3
+#tiff("fig3.tiff", height = 22, width = 28, units = 'cm', res = 1200)
+#plot(fig3)
+#dev.off()
 
-r_col <- plot_grid(biom_means_rel, emer_means_rel, control_means,
-                   nrow = 3, labels = c('B', 'D', 'F'), rel_heights = c(1, 1.2, 0.8))
-plot_grid(l_col, r_col, ncol = 2)
+## FIGURE 4 - 
+fig4
+#tiff("fig4.tiff", height = 13, width = 15, units = 'cm', res = 1200)
+#plot(fig4)
+#dev.off()
 
 #############################################################
 #############################################################
