@@ -704,27 +704,31 @@ emer_lava_sync1 <- ggplot(high_sync, aes(date)) + mytheme +
 emer_lava_sync1
 
 ## BOXPLOT
+ind_results$sync1 = factor(ind_results$sync, levels = c("high","med","low"))
+ind_results$mean1 = factor(ind_results$mean, levels = c(''))
 fig4 <- ggplot(ind_results, aes(x = order, y = date, color = sync, fill = sync)) +
   geom_boxplot(size = 1, alpha = 0.65, position = position_dodge(0.85)) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+                     #limits = rev(levels(ind_results$sync))) +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+                    #limits = rev(levels(ind_results$sync))) +
   labs(fill = 'hatching\nsynchrony', color = 'hatching\nsynchrony') +
-  ylab('date of emergence') + xlab('mean arrival (relative to Rana)') + 
-  coord_flip()
+  ylab('date of emergence') + xlab('mean arrival (relative to Rana)') +
+  coord_flip() + 
+  scale_x_discrete(limits = rev(levels(ind_results$order)))
+fig4
 
-###---TREATMENT GRID-----------------------------------------
-###---EMPTY GRID FOR TRT PRESENTATION------------------------
+###---EMPTY TREATMENT GRID FOR TRT PRESENTATION------------------------
 
 ## Empty plot for showing factorial treatment design
 ## Could consider putting in toy data, or just add distributions in powerpoint/inkscape
 
 #means_compiled$order <- factor(means_compiled$order, levels = c('cont', 'early', 'same', 'late'))
-View(trt_means)
-trt_grid <- ggplot(trt_means, x = order, y = se) + theme_bw() +
+trt_grid <- ggplot(subset(trt_means, subset = (order != 'cont')), x = order, y = se) + theme_bw() +
   facet_grid(sync ~ order) +
-  xlab("date") + ylab('number hatching') + 
-  theme(strip.text = element_text(size = 16),
-        axis.title = element_text(size = 18))
+  xlab("date") + ylab('number of individuals hatching') + 
+  theme(strip.text = element_text(size = 14),
+        axis.title = element_text(size = 14))
 trt_grid
 
 ####---MS FIGURES---####
@@ -732,6 +736,7 @@ trt_grid
 ## SUPPLEMENT - TREATMENT MEANS, ABSOLUTE 
 figS1 <- plot_grid(surv_means, biom_means, mass_means, emer_means, emsd_means, #rana_means,
           nrow = 2, labels = c("A", "B", "C", "D", "E"))#, "F"))
+figS1
 #tiff("figS1.tiff", height = 22, width = 28, units = 'cm', res = 1200)
 #plot(figS1)
 #dev.off()
@@ -1473,10 +1478,12 @@ ggplot(teardown, aes(x = hyla_tads, y = rana_tads)) +
 introsizes <- read.csv("raw_introsizes.csv", header = T)
 
 ## Were sizes standardized across introductions?
-introsize_plot <- ggplot(introsizes, aes(x = as.factor(intro), y = hw, color = sp)) + mytheme +
-  geom_boxplot(size = 2) +
+introsize_plot <- ggplot(introsizes, aes(x = as.factor(intro), y = hw, color = sp, fill = sp)) + mytheme +
+  geom_boxplot(size = 1.5, alpha = 0.7) +
   #geom_point(alpha = 0.5) +
   ylim(0, 4)+
+  scale_color_manual(values = c("#F28335", "#489C92")) +
+  scale_fill_manual(values = c("#F28335", "#489C92")) +
   ylab("headwidth (mm)") + xlab("introduction number")
 introsize_plot
 
