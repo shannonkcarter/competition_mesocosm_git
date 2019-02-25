@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+means_biom.csv
+means_emer.csv
+means_emsd.csv
+means_mass.csv
+means_rana.csv
+means_surv.csv
