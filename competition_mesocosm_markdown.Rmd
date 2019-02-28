@@ -1,5 +1,5 @@
 ---
-title: "Mesocosm Experiment Analysis"
+title: "Analyzing and visualizing data from manipulative experiments"
 author: "Shannon Carter"
 date: "February 25, 2019"
 output: html_document
@@ -94,23 +94,23 @@ biomassxNA <- function(x) {
   return(cumsum(x))
 }
 
-## For each tank, add a cumulative metamorph number and biomass
+## For each tank, add a cumulative frog number and biomass
 meta_accum <- ind_results %>%
   group_by(tank) %>%
   mutate(cumulative_metas = cumsum(ones),
          cumulative_biom  = biomassxNA(mass_mg)) # using the function written above
 
-## This data frame still has one row per frog, but now has cumulative number and mass
+## This data frame still has one row per frog, but now has a running cumulative number and mass
 meta_accum <- dplyr::select(meta_accum, date, tank, block, trt, order, sync, ones,
                     mass_mg, timetoemerge, cumulative_metas, cumulative_biom)
 
 ## Now, I summarize to one row per tank
 tank_results <- meta_accum %>%
   group_by(tank) %>%
-  summarize(surv = max(cumulative_metas)/45,  # final number of frogs
+  summarize(surv = max(cumulative_metas)/45,  # proportion of frogs that made it to emergence
             biom = max(cumulative_biom),      # final cumulative mass of all frogs
             mass = mean(mass_mg, na.rm = T),  # mean individual mass of frogs
-            emer = mean(timetoemerge),        # mean time to emergence for frogs
+            emer = mean(timetoemerge),        # mean time to emergence 
             emsd = sd(timetoemerge))          # variation in time to emergence
 
 ## Add tank treatment info back in
@@ -295,7 +295,7 @@ fig4
 
 # Analysis
 
-I spent at least 40 hours on the stats for this project. Testing different error structures, validating model assumptions, comparing AICs, adding and dropping interactive terms and random effects, etc. Here, I'll give an overview of what that process looked like for one of the five response variables.
+I spent at least 40 hours on the statistical analysis for this project. Testing different error structures, validating model assumptions, comparing AICs, adding and dropping interactive terms and random effects, etc. Here, I'll give an overview of what that process looked like for one of the five response variables.
 
 ## Checking model assumptions
 
