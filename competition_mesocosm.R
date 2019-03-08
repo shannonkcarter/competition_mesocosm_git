@@ -715,7 +715,7 @@ fig4 <- ggplot(ind_results, aes(x = order, y = date, color = sync, fill = sync))
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
                     #limits = rev(levels(ind_results$sync))) +
   labs(fill = 'hatching\nsynchrony', color = 'hatching\nsynchrony') +
-  ylab('date of emergence') + xlab('mean arrival (relative to Rana)') +
+  ylab('date of emergence') + xlab('mean Hyla hatching (relative to Rana)') +
   coord_flip() + 
   scale_x_discrete(limits = rev(levels(ind_results$order)))
 fig4
@@ -797,8 +797,6 @@ fig4
 
 ## Comparing model using numeric vs. unordered factor vs. ordered factor independent variable
 # https://stackoverflow.com/questions/25735636/interpretation-of-ordered-and-non-ordered-factors-vs-numerical-predictors-in-m
-
-
 
 #############################################################
 ###--------------------ABSOLUTE MODELS--------------------###
@@ -1149,6 +1147,7 @@ qqnorm(res_mrana3)
 qqline(res_mrana3)
 
 
+
 #############################################################
 ###--------------------RELATIVE MODELS--------------------###
 #############################################################
@@ -1288,6 +1287,7 @@ qqnorm(res_memsd_rel4)
 qqline(res_memsd_rel4)
 plot(predict(memsd_rel4), tank_results_contadj$emsd_adj, xlim = c(0, 40), ylim = c(0, 40))
 abline(a = 0, b = 1) # not horrible
+
 
 
 #############################################################
@@ -1437,6 +1437,7 @@ emer_predictxactual <- ggplot(survivors_nocontrol,
   ylab("cumulative metamorphs") + xlab('mean arrival (relative to Rana)') +
   facet_grid(. ~ sync)
 emer_predictxactual # sexy af
+
 
 
 
@@ -1594,6 +1595,7 @@ qqnorm(res_memercv_rel4)
 qqline(res_memercv_rel4)
 plot(predict(memercv_rel4), surv_contadj$emercv_adj, xlim = c(-0.2, 0.4), ylim = c(-0.2, 0.4))
 abline(a = 0, b = 1) # not horrible
+
 
 
 
@@ -2222,6 +2224,7 @@ emer_lava_sync   # orange is high synchrony, blue is low synchrony
 surv_predictxactual  # see fit of model with predicted vs actual values by trt
 biom_predictxactual
 mass_predictxactual  # seems to over-predict often plus squashes all variation
+
 
 #############################################################
 ###------------PLOT VERSIONS FOR PRESENTATIONS------------###
