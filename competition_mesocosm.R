@@ -520,18 +520,19 @@ Anova(mrana1)
 
 ### RAW MEANS ###
 rana_means <- ggplot(subset(trt_means, subset = (variable == 'rana')),
-                     aes(x = order, y = mean, group = sync, fill = sync, shape = sync)) + mytheme +
+                     aes(x = order, y = mean, fill = sync, shape = sync, color = sync, group = sync)) + mytheme +
   geom_line(size = 1, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = (mean - se), ymax = (mean + se), width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2)) +
+  geom_point(size = 5, position = position_dodge(width = 0.2), color = 'black') +
   xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
+  labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony', color =  'hatching\nsynchrony') +
   ylab(expression(paste('proportion survival ',  italic(' R. sphenocephala'),))) +
   theme(legend.position = c(0.1, 0.82),
         axis.title = element_text(size = 12),
         axis.text  = element_text(size = 10)) +  
-  scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) +
+  scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
+  scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))  
 
 ### CORRELATION BETWEEN RANA AND HYLA SURVIVAL ###
