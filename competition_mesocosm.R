@@ -5,7 +5,7 @@
 #############################################################
 
 ## Set working directory and clear memory
-setwd("C:\\Users\\Shannon\\Desktop\\GitHub Repos\\competition_mesocosm_git1")
+setwd("C:\\Users\\Shannon\\Desktop\\GitHub Repos\\competition_mesocosm_git")
 rm(list = ls(all = T))
 
 ## Load required packages
