@@ -5,7 +5,7 @@
 #############################################################
 
 ## Set working directory and clear memory
-setwd("C:\\Users\\Shannon\\Desktop\\GitHub Repos\\competition_mesocosm_git")
+setwd("C:\\Users\\Shannon\\Desktop\\GitHub Repos\\competition_mesocosm_git1")
 rm(list = ls(all = T))
 
 ## Load required packages
@@ -261,16 +261,16 @@ Anova(msurv_rel)
 
 ### RAW MEANS ###
 surv_means <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != 'cont')),
-                     aes(x = order, y = mean, group = sync, fill = sync, color = sync, shape = sync)) + mytheme +
-  geom_hline(yintercept = 0.58, size = 1, linetype = 'dashed', color = "#fbb973") +
-  geom_hline(yintercept = 0.69, size = 1, linetype = 'dashed', color = "#f96968") +
-  geom_hline(yintercept = 0.62, size = 1, linetype = 'dashed', color = "#4b1d1d") +
+                     aes(x = order, y = mean*100, group = sync, fill = sync, color = sync, shape = sync)) + mytheme +
+  geom_hline(yintercept = 58, size = 1, linetype = 'dashed', color = "#fbb973") +
+  geom_hline(yintercept = 69, size = 1, linetype = 'dashed', color = "#f96968") +
+  geom_hline(yintercept = 62, size = 1, linetype = 'dashed', color = "#4b1d1d") +
   #geom_point(data = survivors_nocontrol, aes(x = order, y = prop_surv, group = sync, fill = sync, shape = sync),
   #           position = position_dodge(width = 0.1)) + 
   geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
-                aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2)) +
+                aes(ymin = (mean - se)*100, ymax = (mean + se)*100, width = 0)) +
+  geom_point(size = 5, position = position_dodge(width = 0.2), color = 'black') +
   ylab('proportion survival') +
   xlab('mean Hyla hatching (relative to Rana)') +
   labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony', color = "hatching\nsynchrony") +
@@ -284,11 +284,11 @@ surv_means <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != '
 ### MEANS RELATIVE TO CONTROL ###
 surv_means_rel <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != 'cont')), 
                          aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
   geom_line(size = 1, position = position_dodge(width = 0.1)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
                 aes(ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1)) +
+  geom_point(size = 5, position = position_dodge(width = 0.1), color = 'black') +
   ylab(expression(atop("proportion survival", paste(" (", Delta, " control)")))) +
   xlab(NULL) +
   labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony') +
@@ -300,11 +300,11 @@ surv_means_rel <- ggplot(subset(trt_means, subset = (variable == 'surv' & order 
 surv_means_rel
 
 surv_means_rel1 <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != 'cont')), 
-                         aes(x = order, y = adj, shape = sync, fill = sync, color = sync, group = sync)) + mytheme +
+                         aes(x = order, y = adj*100, shape = sync, fill = sync, color = sync, group = sync)) + mytheme +
   geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
-                aes(ymin = adj - se, ymax = adj + se, width = 0)) +
+                aes(ymin = (adj - se)*100, ymax = (adj + se)*100, width = 0)) +
   geom_point(size = 5, color = "black", position = position_dodge(width = 0.1)) +
   ylab(expression(atop("proportion survival", paste(" (", Delta, " control)")))) +
   xlab('mean Hyla hatching (relative to Rana)') +
@@ -340,7 +340,7 @@ biom_means <- ggplot(subset(trt_means, subset = (variable == 'biom' & order != '
   geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2)) +
+  geom_point(size = 5, position = position_dodge(width = 0.2), color = 'black') +
   ylab("total biomass export (mg)") + 
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
@@ -357,9 +357,9 @@ biom_means_rel <- ggplot(subset(trt_means, subset = (variable == 'biom' & order 
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), aes(color = sync)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = (adj - se)/1000, ymax = (adj + se)/1000, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1)) +
+  geom_point(size = 5, position = position_dodge(width = 0.1), color = 'black') +
   ylab(expression(paste("total biomass export (g, ", Delta, " control)"))) +
-  ylab(expression(atop("total biomass export", paste(" (g, ", Delta, " control)")))) +
+  ylab(expression(atop("total biomass export (g)", paste(" (", Delta, " control)")))) +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
@@ -385,7 +385,7 @@ mass_means <- ggplot(subset(trt_means, subset = (variable == 'mass' & order != '
   geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = log(mean - se), ymax = log(mean + se), width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2)) +
+  geom_point(size = 5, position = position_dodge(width = 0.2),  color = 'black') +
   ylab("log per capita mass (mg)") + 
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
@@ -398,13 +398,13 @@ mass_means <- ggplot(subset(trt_means, subset = (variable == 'mass' & order != '
 ### MEANS RELATIVE TO CONTROL ###
 mass_means_rel <- ggplot(subset(trt_means, subset = (variable == 'mass' & order != 'cont')), 
                          aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), aes(color = sync)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2)) +
+  geom_point(size = 5, position = position_dodge(width = 0.2), color = 'black') +
   #ylab(expression(paste("per capita mass (mg, ", Delta, " control)"))) +
-  ylab(expression(atop("per capita mass", paste(" (mg, ", Delta, " control)")))) +
+  ylab(expression(atop("per capita mass (mg)", paste(" (", Delta, " control)")))) +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
@@ -430,7 +430,7 @@ emer_means <- ggplot(subset(trt_means, subset = (variable == 'emer' & order != '
   geom_line(size = 0.7, position = position_dodge(width = 0.1)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1)) +
+  geom_point(size = 5, position = position_dodge(width = 0.1),  color = 'black') +
   ylab("days to emergence") + 
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
@@ -443,11 +443,11 @@ emer_means <- ggplot(subset(trt_means, subset = (variable == 'emer' & order != '
 ### MEANS RELATIVE TO CONTROL ###
 emer_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emer' & order != 'cont')), 
                          aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), aes(color = sync)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1)) +
+  geom_point(size = 5, position = position_dodge(width = 0.1),  color = 'black') +
   #ylab(expression(paste("mean days to emergence (", Delta, " control)"))) +
   ylab(expression(atop("mean days to emergence", paste(" (", Delta, " control)")))) +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
@@ -479,7 +479,7 @@ emsd_means <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order != '
   geom_line(size = 0.7, position = position_dodge(width = 0.2)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.2),
                 aes(ymin = mean - se, ymax = mean + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2)) +
+  geom_point(size = 5, position = position_dodge(width = 0.2),  color = 'black') +
   ylab("s.d., days to emergence") + 
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
@@ -492,12 +492,12 @@ emsd_means <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order != '
 ### MEANS RELATIVE TO CONTROLS ###
 emsd_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order != 'cont')), 
                             aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + #mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), 
             aes(color = sync)) +
   geom_errorbar(size = 1, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1)) +
+  geom_point(size = 5, position = position_dodge(width = 0.1),  color = 'black') +
   #ylab(expression(paste("s.d., days to emergence (", Delta, " control)"))) +
   ylab(expression(atop("s.d., days to emergence", paste(" (", Delta, " control)")))) +
   xlab('mean Hyla hatching (relative to Rana)') +
