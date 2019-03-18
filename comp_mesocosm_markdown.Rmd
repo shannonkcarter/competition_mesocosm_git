@@ -1,8 +1,13 @@
 ---
-title: "Analyzing and visualizing data from manipulative experiments"
+title: "Data Analysis for Mesocosm Experiment"
 author: "Shannon Carter"
 date: "February 25, 2019"
-output: pdf_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    highlight: tango 
 ---
 
 Last summer, I performed an experiment where I created 60 mini experimental ponds in black tanks (pictured below), filled the tanks with tadpoles, and monitored the tanks daily to collect freshly emerged frogs (also picutred). The treatments imposed on the tanks were designed to mimic some biological changes we're expected to see with climate change.
@@ -66,7 +71,7 @@ trt_means$order <- factor(trt_means$order, levels = c('early', 'same', 'late', '
 
 ```
 
-## View raw data
+# View Raw Data
 
 First, a look at my raw data. Each row represents one frog. Tank refers to which tank number the frog came from and "block", "trt", "order" and "sync" are four treatment identifiers for each tank. "timetoemerge" is simply the number of days between when the tadpoles were added to the tank and when that particular frog emerged. This snippet shows the first and last 5 rows of the dataset. I checked on these tanks every day for 152 days and collected and weighed 1400 frogs. It was a lot of work!
 
@@ -79,7 +84,9 @@ ind_results$doy <- NULL
 ind_results[c(1:5, 1383:1388),]
 ```
 
-## Data processing
+# Data Processing
+
+## Summarize by Tank
 
 First thing to do is summarize results by tank. Here, I count the number of frogs that comes from each tank and calculate five response variables: proportion survival, cumulative biomass, mean per capita mass, mean per capita time to emergence, and variation in time to emergence. 
 ```{r, warning = F}
@@ -124,9 +131,11 @@ tank_results <- as.data.frame(unique(dplyr::select(tank_results, tank, block, tr
 
 The resulting data frame (snippet below) has one row per tank. "block", "trt", "order", and "sync" give information about the treatment assigned to the tank. "surv", "biom", "mass", "emer" and "emsd" are response variables I measured/calculated.
 
-```{r, echo = T}
+```{r, echo = F}
 head(tank_results)
 ```
+
+## Summarize by Treatment
 
 I then group the tanks by treatment ('trt') and calculate means and variance measures (standard deviation, standard error, and 95% confidence intervals) for each of the 5 response variables. This part isn't shown, but a snippet of the resulting dataframe is below.
 
@@ -134,19 +143,20 @@ I then group the tanks by treatment ('trt') and calculate means and variance mea
 trt_means1 <- trt_means
 trt_means1$cont <- NULL
 trt_means1$adj  <- NULL
-```
-```{r, echo = T}
+
 head(trt_means1)
 ```
 
-## Figures
+# Figures
 
 Now we're ready to take a look at the results! For each of the five response variables, I make a figure that looks like this. This one shows proportion survival. Here, the x-axis and colors represent the two aspects of my treatments ('order' and 'sync'). The dashed lines represent control values which correspond to each level of 'sync'. 
+
+## Survival only 
 
 ```{r, echo = T, warning = F, fig.align='center'}
 
 surv_means <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != 'cont')),
-                     # synchrony as color, fill, and shape so color of lines match points and it's b/w friendly
+                     # synchrony as color, fill, and shape so color of lines match points and it's bw friendly
                      aes(x = order, y = mean, group = sync, fill = sync, color = sync, shape = sync)) +   
   
   # 3 horizontal lines to show control baselines- colors matching synchrony level
@@ -184,8 +194,7 @@ surv_means
 
 ```
 
-##  
-## All response variables together
+## All Response Variables
 
 Here, I've reproduced the above figure for each of the 5 response variables and stitched them together. These results are very exciting! But you'll just have to take my word for it, because I'm not not going to get into the nitty gritty biology of it here. 
 
@@ -275,7 +284,7 @@ fig1 <- plot_grid(surv_means, biom_means, mass_means, emer_means, emsd_means,
 fig1
 ```
 
-##   
+## Emergence Timing
 I really like this figure because it reminds me of ice cream. Here, we see the mean and variation in how long individual frogs took to emerge broken down by treatment.
 
 ```{r, echo = F, warning = F, fig.height = 6, fig.width = 8, fig.align='center'}
