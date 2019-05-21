@@ -753,50 +753,6 @@ trt_grid <- ggplot(subset(trt_means, subset = (order != 'cont')), x = order, y =
 trt_grid
 
 
-###---FUN LOLLIPOP VERSION-----------------------------------
-
-
-
-## calculate worldwide average
-world_avg <- df_ratios %>%
-  summarize(avg = mean(student_ratio, na.rm = T)) %>%
-  pull(avg)
-
-## final plot
-## set seed to fix position of jittered points
-set.seed(123)
-
-## final plot
-ggplot(aes(region, student_ratio, color = region)) +
-  geom_segment(aes(x = region, xend = region,
-                   y = world_avg, yend = student_ratio_region),
-               size = 0.8) +
-  geom_hline(aes(yintercept = world_avg), color = "grey70", size = 0.6) +
-  geom_point(aes(region, student_ratio_region), size = 5) +
-  geom_jitter(size = 2, alpha = 0.25, width = 0.2) +
-  coord_flip() +
-  annotate("text", x = 6.3, y = 35, family = "Poppins", size = 2.7, color = "grey20",
-           label = glue::glue("Worldwide average:\n{round(world_avg, 1)} students per teacher")) +
-  annotate("text", x = 3.5, y = 10, family = "Poppins", size = 2.7, color = "grey20",
-           label = "Continental average") +
-  annotate("text", x = 1.7, y = 11, family = "Poppins", size = 2.7, color = "grey20",
-           label = "Countries per continent") +
-  annotate("text", x = 1.9, y = 64, family = "Poppins", size = 2.7, color = "grey20",
-           label = "The Central African Republic has by far\nthe most students per teacher") +
-  geom_curve(data = arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
-             arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
-             color = "grey20", curvature = -0.3) +
-  annotation_custom(ggplotGrob(map_regions), xmin = 2.5, xmax = 7.5, ymin = 55, ymax = 85) +
-  scale_y_continuous(limits = c(0, 90), expand = c(0.005, 0.005), breaks = c(1, seq(20, 80, by = 20))) +
-  scale_color_uchicago() +
-  labs(x = NULL, y = "Student to teacher ratio",
-       caption = 'Data: UNESCO Institute for Statistics') +
-  theme_light(base_size = 15, base_family = "Poppins") +
-  theme(legend.position = "none",
-        axis.title = element_text(size = 12),
-        axis.text.x = element_text(family = "Roboto Mono", size = 10),
-        plot.caption = element_text(size = 9, color = "grey50"),
-        panel.grid = element_blank())
 ####---MS FIGURES---####
 
 ## SUPPLEMENT - TREATMENT MEANS, ABSOLUTE 
@@ -1210,6 +1166,15 @@ qqnorm(res_mrana3)
 qqline(res_mrana3)
 
 
+###---MANOVA FOR REVIEWER 2----------------------------------
+
+# make a variance-covariance matrix
+mod_tank <- lm(cbind(surv, biom, mass, emer, emsd, rana) ~ sync * order, 
+               data = subset(tank_results, subset = (order != 'cont')))
+
+# then, it's a simple line to run the model
+manova <- Anova(mod_tank)
+manova
 
 #############################################################
 ###--------------------RELATIVE MODELS--------------------###
