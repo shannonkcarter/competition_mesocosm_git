@@ -413,7 +413,7 @@ mass_means_rel <- ggplot(subset(trt_means, subset = (variable == 'mass' & order 
   xlab('mean Hyla hatching (relative to Rana)') +
   theme(legend.position = 'none',
         axis.title = element_text(size = 13),
-        axis.text  = element_text(size = 12)) +  
+        axis.text  = element_text(size = 11)) +  
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
@@ -553,88 +553,75 @@ m_hr <- lm(data = subset(tank_results, subset = (order != 'cont')),
 
 ## SEPARATING RESPONSE VARIABLES
 trt_means_control <- subset(trt_means, subset = (order == 'cont'))
+cont_theme <- theme(axis.title = element_text(size = 8),
+                          axis.text  = element_text(size = 6),
+                          axis.text.x = element_blank(),
+                          axis.ticks.x = element_blank(),
+                    legend.title = element_text(size = 8),
+                    legend.text = element_text(size = 8))
 
 surv_cont <- ggplot(subset(trt_means_control, subset = (variable == 'surv')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.8),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.8),
                 aes(ymin = mean - se, ymax = mean + se, width = 0, color = sync)) +
-  geom_point(size = 5, position = position_dodge(width = 0.8)) +
+  geom_point(size = 2, position = position_dodge(width = 0.8), color = "black") +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23)) +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 12),
-        axis.text  = element_text(size = 10),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) +
+  theme(legend.position = 'none') + cont_theme +
   ylim(0.4, 0.9) +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('proportion survival')
+surv_cont
 
 biom_cont <- ggplot(subset(trt_means_control, subset = (variable == 'biom')),
-                    aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.8),
-                aes(ymin = mean - se, ymax = mean + se, width = 0, color = sync)) +
-  geom_point(size = 5, position = position_dodge(width = 0.8)) +
+                    aes(x = order, y = mean/1000, shape = sync, fill = sync, color = sync, group = sync)) +
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.8),
+                aes(ymin = (mean - se)/1000, ymax = (mean + se)/1000, width = 0, color = sync)) +
+  geom_point(size = 2, position = position_dodge(width = 0.8), color = "black") +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23)) +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 12),
-        axis.text  = element_text(size = 10),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) +
-  ylim(3000, 7000) + 
+  theme(legend.position = 'none') + cont_theme +
+  ylim(3, 7) + 
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
-  xlab(NULL) + ylab('total biomass export (mg)')
+  xlab(NULL) + ylab('total biomass export (g)')
 
 mass_cont <- ggplot(subset(trt_means_control, subset = (variable == 'mass')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.8),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.8),
                 aes(ymin = mean - se, ymax = mean + se, width = 0, color = sync)) +
-  geom_point(size = 5, position = position_dodge(width = 0.8)) +
+  geom_point(size = 2, position = position_dodge(width = 0.8), color = "black") +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23)) +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 12),
-        axis.text  = element_text(size = 10),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) +
+  theme(legend.position = 'none') + cont_theme +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('per capita mass (mg)')
 
 emer_cont <- ggplot(subset(trt_means_control, subset = (variable == 'emer')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.8),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.8),
                 aes(ymin = mean - se, ymax = mean + se, width = 0, color = sync)) +
-  geom_point(size = 5, position = position_dodge(width = 0.8)) +
+  geom_point(size = 2, position = position_dodge(width = 0.8), color = "black") +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23)) +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 12),
-        axis.text  = element_text(size = 10),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) +
+  theme(legend.position = 'none') + cont_theme +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('mean days to emergence')
 
 emsd_cont <- ggplot(subset(trt_means_control, subset = (variable == 'emsd')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.8),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.8),
                 aes(ymin = mean - se, ymax = mean + se, width = 0, color = sync)) +
-  geom_point(size = 5, position = position_dodge(width = 0.8)) +
+  geom_point(size = 2, position = position_dodge(width = 0.8), color = "black") +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
-  scale_shape_manual(values = c(21, 24, 23)) +
-  theme(axis.title = element_text(size = 12),
-        axis.text  = element_text(size = 10),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) +
+  scale_shape_manual(values = c(21, 24, 23)) + cont_theme +
   labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
   xlab(NULL) + ylab('s.d., days to emergence')
-
+emsd_cont
 ## ALL TOGETHER
 
 trt_means1 <- trt_means
@@ -765,26 +752,26 @@ figS1
 
 ## FIGURE 2 - CONTROL MEANS
 fig2 <- plot_grid(surv_cont, biom_cont, mass_cont, emer_cont, emsd_cont, 
-          nrow = 1, labels = c('A', 'B', 'C', 'D', 'E'),
-          rel_widths = c(1, 1, 1, 1, 1.5))
+          nrow = 1, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 8,
+          rel_widths = c(1, 1, 1, 1, 2))
 fig2
-#tiff("fig2.tiff", height = 7, width = 28, units = 'cm', res = 1200)
-#plot(fig2)
-#dev.off()
+tiff("fig2_pub.tiff", height = 1.5, width = 6, units = 'in', res = 1200)
+plot(fig2)
+dev.off()
 
 ## FIGURE 3 - TREATMENT MEANS, RELATIVE TO CONTROLS
 fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
           nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'))
 fig3
-#tiff("fig3.tiff", height = 22, width = 28, units = 'cm', res = 1200)
+#tiff("fig3.tiff", height = 22, width = 30.5, units = 'cm', res = 1200)
 #plot(fig3)
 #dev.off()
 
 ## FIGURE 4 - 
 fig4
-#tiff("fig4.tiff", height = 13, width = 15, units = 'cm', res = 1200)
-#plot(fig4)
-#dev.off()
+tiff("fig4.tiff", height = 13, width = 15, units = 'cm', res = 1200)
+plot(fig4)
+dev.off()
 
 #############################################################
 #############################################################
