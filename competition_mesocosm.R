@@ -762,7 +762,7 @@ fig3
 
 ## FIGURE 4 - 
 fig4
-tiff("fig4.tiff", height = 13, width = 15, units = 'in', res = 1200)
+tiff("fig4.tiff", height = 5.2, width = 6, units = 'in', res = 1200)
 plot(fig4)
 dev.off()
 
