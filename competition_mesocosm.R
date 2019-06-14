@@ -311,11 +311,12 @@ surv_means_rel1 <- ggplot(subset(trt_means, subset = (variable == 'surv' & order
   geom_errorbar(size = 0.5, position = position_dodge(width = 0.1),
                 aes(ymin = (adj - se)*100, ymax = (adj + se)*100, width = 0)) +
   geom_point(size = 2, color = "black", position = position_dodge(width = 0.1)) +
-  ylab(expression(atop("proportion survival", paste(" (", Delta, " control)")))) +
+  #ylab(expression(atop("proportion survival", paste(" (", Delta, " control)")))) +
+  ylab("proportion survival\n(Δ control)") +
   xlab('mean Hyla hatching\n(relative to Rana)') +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony', color = 'hatching\nsynchrony') +
-  theme(legend.position = c(0.05, 0.22)) + cont_theme +  
+  theme(legend.position = "none") + cont_theme +  
   #scale_fill_brewer(palette = 'Dark2') +
   #scale_color_brewer(palette = 'Dark2') +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
@@ -360,11 +361,8 @@ biom_means_rel <- ggplot(subset(trt_means, subset = (variable == 'biom' & order 
   geom_errorbar(size = 0.5, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = (adj - se)/1000, ymax = (adj + se)/1000, width = 0)) +
   geom_point(size = 2, position = position_dodge(width = 0.1), color = 'black') +
-  
-  #ylab(expression(paste("total biomass export (g, ", Delta, " control)"))) +
-  #ylab(expression(atop("total biomass export (g)", paste(" (", Delta, " control)")))) +
-  ylab(expression(paste("total biomass export (g),\n", (paste(Delta~control))))) +
-  #ylab("total biomass export (g)\n(expression(Delta*)control)")+
+  #ylab(expression(atop("total biomass export (g)", (Delta*control)))) +
+  ylab("total biomass export (g)\n(Δ control)") +
   xlab('mean Hyla hatching\n(relative to Rana)') +
   theme(legend.position = 'none') + cont_theme +  
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
@@ -372,6 +370,7 @@ biom_means_rel <- ggplot(subset(trt_means, subset = (variable == 'biom' & order 
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))
 biom_means_rel
+
 ###---PER CAPITA MASS (HYLA)---------------------------------
 
 ### CHOSEN MODEL ###
@@ -405,8 +404,8 @@ mass_means_rel <- ggplot(subset(trt_means, subset = (variable == 'mass' & order 
   geom_errorbar(size = 0.5, position = position_dodge(width = 0.2),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
   geom_point(size = 2, position = position_dodge(width = 0.2), color = 'black') +
-  #ylab(expression(paste("per capita mass (mg, ", Delta, " control)"))) +
   ylab(expression(atop("per capita mass (mg)", paste(" (", Delta, " control)")))) +
+  ylab("per capita mass (mg)\n(Δ control)") +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   xlab('mean Hyla hatching\n(relative to Rana)') +
   theme(legend.position = 'none') +  cont_theme +
@@ -450,6 +449,7 @@ emer_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emer' & order 
   geom_point(size = 2, position = position_dodge(width = 0.1),  color = 'black') +
   #ylab(expression(paste("mean days to emergence (", Delta, " control)"))) +
   ylab(expression(atop("mean days to emergence", paste(" (", Delta, " control)")))) +
+  ylab("mean days to emergence\n(Δ control)") +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   xlab('mean Hyla hatching\n(relative to Rana)') +
   theme(legend.position = 'none') +  cont_theme +
@@ -497,7 +497,8 @@ emsd_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order 
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
   geom_point(size = 2, position = position_dodge(width = 0.1),  color = 'black') +
   #ylab(expression(paste("s.d., days to emergence (", Delta, " control)"))) +
-  ylab(expression(atop("s.d., days to emergence", paste(" (", Delta, " control)")))) +
+  #ylab(expression(atop("s.d., days to emergence", paste(" (", Delta, " control)")))) +
+  ylab("s.d., days to emergence\n(Δ control)") +
   xlab('mean Hyla hatching\n(relative to Rana)') +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   theme(legend.position = 'none') + cont_theme + 
@@ -755,13 +756,13 @@ fig2
 fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
           nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 8)
 fig3
-tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
-plot(fig3)
-dev.off()
+#tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
+#plot(fig3)
+#dev.off()
 
 ## FIGURE 4 - 
 fig4
-tiff("fig4.tiff", height = 13, width = 15, units = 'cm', res = 1200)
+tiff("fig4.tiff", height = 13, width = 15, units = 'in', res = 1200)
 plot(fig4)
 dev.off()
 
