@@ -209,6 +209,7 @@ tank_results_contadj <- tank_results_contadj %>%
 ## Finally, write a csv or add to existing survival csv
 write.csv(tank_results_contadj, 'tank_results_contadj.csv')
 
+
 #############################################################
 ###-----------------------LOAD DATA-----------------------###
 #############################################################
@@ -305,19 +306,16 @@ surv_means_rel
 
 surv_means_rel1 <- ggplot(subset(trt_means, subset = (variable == 'surv' & order != 'cont')), 
                          aes(x = order, y = adj*100, shape = sync, fill = sync, color = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 1, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.5, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.1),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.1),
                 aes(ymin = (adj - se)*100, ymax = (adj + se)*100, width = 0)) +
-  geom_point(size = 5, color = "black", position = position_dodge(width = 0.1)) +
+  geom_point(size = 2, color = "black", position = position_dodge(width = 0.1)) +
   ylab(expression(atop("proportion survival", paste(" (", Delta, " control)")))) +
-  xlab('mean Hyla hatching (relative to Rana)') +
+  xlab('mean Hyla hatching\n(relative to Rana)') +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
   labs(shape = "hatching\nsynchrony", fill = 'hatching\nsynchrony', color = 'hatching\nsynchrony') +
-  theme(legend.position = c(0.05, 0.22),
-    #legend.position = c(0.2, 0.22),
-        axis.title = element_text(size = 13),
-        axis.text  = element_text(size = 12)) +  
+  theme(legend.position = c(0.05, 0.22)) + cont_theme +  
   #scale_fill_brewer(palette = 'Dark2') +
   #scale_color_brewer(palette = 'Dark2') +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
@@ -357,23 +355,23 @@ biom_means <- ggplot(subset(trt_means, subset = (variable == 'biom' & order != '
 ### MEANS RELATIVE TO CONTROL ###
 biom_means_rel <- ggplot(subset(trt_means, subset = (variable == 'biom' & order != 'cont')), 
                          aes(x = order, y = adj/1000, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.5, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), aes(color = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.1),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = (adj - se)/1000, ymax = (adj + se)/1000, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1), color = 'black') +
-  ylab(expression(paste("total biomass export (g, ", Delta, " control)"))) +
-  ylab(expression(atop("total biomass export (g)", paste(" (", Delta, " control)")))) +
-  #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  xlab('mean Hyla hatching (relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 13),
-        axis.text  = element_text(size = 12)) +  
+  geom_point(size = 2, position = position_dodge(width = 0.1), color = 'black') +
+  
+  #ylab(expression(paste("total biomass export (g, ", Delta, " control)"))) +
+  #ylab(expression(atop("total biomass export (g)", paste(" (", Delta, " control)")))) +
+  ylab(expression(paste("total biomass export (g),\n", (paste(Delta~control))))) +
+  #ylab("total biomass export (g)\n(expression(Delta*)control)")+
+  xlab('mean Hyla hatching\n(relative to Rana)') +
+  theme(legend.position = 'none') + cont_theme +  
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_shape_manual(values = c(21, 24, 23))
-
+biom_means_rel
 ###---PER CAPITA MASS (HYLA)---------------------------------
 
 ### CHOSEN MODEL ###
@@ -402,18 +400,16 @@ mass_means <- ggplot(subset(trt_means, subset = (variable == 'mass' & order != '
 ### MEANS RELATIVE TO CONTROL ###
 mass_means_rel <- ggplot(subset(trt_means, subset = (variable == 'mass' & order != 'cont')), 
                          aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.5, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), aes(color = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.2),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.2),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.2), color = 'black') +
+  geom_point(size = 2, position = position_dodge(width = 0.2), color = 'black') +
   #ylab(expression(paste("per capita mass (mg, ", Delta, " control)"))) +
   ylab(expression(atop("per capita mass (mg)", paste(" (", Delta, " control)")))) +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  xlab('mean Hyla hatching (relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 13),
-        axis.text  = element_text(size = 11)) +  
+  xlab('mean Hyla hatching\n(relative to Rana)') +
+  theme(legend.position = 'none') +  cont_theme +
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
@@ -447,18 +443,16 @@ emer_means <- ggplot(subset(trt_means, subset = (variable == 'emer' & order != '
 ### MEANS RELATIVE TO CONTROL ###
 emer_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emer' & order != 'cont')), 
                          aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + mytheme +
-  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.5, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), aes(color = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.1),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1),  color = 'black') +
+  geom_point(size = 2, position = position_dodge(width = 0.1),  color = 'black') +
   #ylab(expression(paste("mean days to emergence (", Delta, " control)"))) +
   ylab(expression(atop("mean days to emergence", paste(" (", Delta, " control)")))) +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  xlab('mean Hyla hatching (relative to Rana)') +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 13),
-        axis.text  = element_text(size = 12)) +  
+  xlab('mean Hyla hatching\n(relative to Rana)') +
+  theme(legend.position = 'none') +  cont_theme +
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
@@ -496,19 +490,17 @@ emsd_means <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order != '
 ### MEANS RELATIVE TO CONTROLS ###
 emsd_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order != 'cont')), 
                             aes(x = order, y = adj, shape = sync, fill = sync, group = sync)) + #mytheme +
-  geom_hline(yintercept = 0, size = 0.7, linetype = 'dashed', color = "black") +
+  geom_hline(yintercept = 0, size = 0.5, linetype = 'dashed', color = "black") +
   geom_line(size = 0.5, alpha = 0.8, position = position_dodge(width = 0.1), 
             aes(color = sync)) +
-  geom_errorbar(size = 1, position = position_dodge(width = 0.1),
+  geom_errorbar(size = 0.5, position = position_dodge(width = 0.1),
                 aes(color = sync, ymin = adj - se, ymax = adj + se, width = 0)) +
-  geom_point(size = 5, position = position_dodge(width = 0.1),  color = 'black') +
+  geom_point(size = 2, position = position_dodge(width = 0.1),  color = 'black') +
   #ylab(expression(paste("s.d., days to emergence (", Delta, " control)"))) +
   ylab(expression(atop("s.d., days to emergence", paste(" (", Delta, " control)")))) +
-  xlab('mean Hyla hatching (relative to Rana)') +
+  xlab('mean Hyla hatching\n(relative to Rana)') +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  theme(legend.position = 'none',
-        axis.title = element_text(size = 13),
-        axis.text  = element_text(size = 12)) +  
+  theme(legend.position = 'none') + cont_theme + 
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
@@ -755,17 +747,17 @@ fig2 <- plot_grid(surv_cont, biom_cont, mass_cont, emer_cont, emsd_cont,
           nrow = 1, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 8,
           rel_widths = c(1, 1, 1, 1, 2))
 fig2
-tiff("fig2_pub.tiff", height = 1.5, width = 6, units = 'in', res = 1200)
-plot(fig2)
-dev.off()
+#tiff("fig2_pub.tiff", height = 1.5, width = 6, units = 'in', res = 1200)
+#plot(fig2)
+#dev.off()
 
 ## FIGURE 3 - TREATMENT MEANS, RELATIVE TO CONTROLS
 fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
-          nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'))
+          nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 8)
 fig3
-#tiff("fig3.tiff", height = 22, width = 30.5, units = 'cm', res = 1200)
-#plot(fig3)
-#dev.off()
+tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
+plot(fig3)
+dev.off()
 
 ## FIGURE 4 - 
 fig4
