@@ -29,6 +29,13 @@ mytheme <- theme(panel.background = element_blank(),
                  axis.title = element_text(size = rel(1.5)),
                  axis.line  = element_line(colour = "black"))
 
+cont_theme <- theme(axis.title = element_text(size = 8),
+                    axis.text  = element_text(size = 6),
+                    #axis.text.x = element_blank(),
+                    #axis.ticks.x = element_blank(),
+                    legend.title = element_text(size = 8),
+                    legend.text = element_text(size = 8))
+
 #############################################################
 ###---------------------DATA PROCESSING-------------------###
 #############################################################
@@ -546,12 +553,6 @@ m_hr <- lm(data = subset(tank_results, subset = (order != 'cont')),
 
 ## SEPARATING RESPONSE VARIABLES
 trt_means_control <- subset(trt_means, subset = (order == 'cont'))
-cont_theme <- theme(axis.title = element_text(size = 8),
-                          axis.text  = element_text(size = 6),
-                          axis.text.x = element_blank(),
-                          axis.ticks.x = element_blank(),
-                    legend.title = element_text(size = 8),
-                    legend.text = element_text(size = 8))
 
 surv_cont <- ggplot(subset(trt_means_control, subset = (variable == 'surv')),
                     aes(x = order, y = mean, shape = sync, fill = sync, color = sync, group = sync)) +
@@ -756,9 +757,9 @@ fig2
 fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
           nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 8)
 fig3
-#tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
-#plot(fig3)
-#dev.off()
+tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
+plot(fig3)
+dev.off()
 
 ## FIGURE 4 - 
 fig4
