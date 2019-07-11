@@ -507,8 +507,10 @@ emsd_means_rel <- ggplot(subset(trt_means, subset = (variable == 'emsd' & order 
   #ylab(expression(atop("s.d., days to emergence", paste(" (", Delta, " control)")))) +
   ylab("s.d., days to emergence\n(Δ control)") +
   xlab('mean Hyla hatching\n(relative to Rana)') +
+  labs(color = 'hatching\nsynchrony', fill = 'hatching\nsynchrony', shape = 'hatching\nsynchrony') +
+  theme(legend.position = c(1.2, 0.5)) +
   #xlab(expression(paste('mean ',  italic(' H. versicolor'),' hatching (relative to',  italic(' R. sphenocephala'),")"))) +
-  theme(legend.position = 'none') + cont_theme + 
+  cont_theme + 
   scale_fill_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   scale_color_manual(values = wes_palette(n = 3, name = "GrandBudapest1")) +
   #scale_fill_manual(values = c("#bdc9e1", "#67a9cf", "#016c59")) + 
@@ -750,6 +752,7 @@ fig2 <- plot_grid(surv_cont, biom_cont, mass_cont, emer_cont, emsd_cont,
           rel_widths = c(1, 1, 1, 1, 2))
 fig2
 #tiff("fig2_pub.tiff", height = 1.5, width = 6, units = 'in', res = 1200)
+#tiff("fig2_pub2.tiff", height = 1300, width = 5200, units = "px", res = 800, compression = "lzw")
 #plot(fig2)
 #dev.off()
 
@@ -757,13 +760,15 @@ fig2
 fig3 <- plot_grid(surv_means_rel1, biom_means_rel, mass_means_rel, emer_means_rel, emsd_means_rel,
           nrow = 2, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 8)
 fig3
-tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
+#tiff("fig3_pub.tiff", height = 4.4, width = 6, units = 'in', res = 1200)
+tiff("fig3_pub2.tiff", height = 3818, width = 5200, units = "px", res = 800, compression = "lzw")
 plot(fig3)
 dev.off()
 
 ## FIGURE 4 - 
 fig4
-tiff("fig4.tiff", height = 5.2, width = 6, units = 'in', res = 1200)
+#tiff("fig4.tiff", height = 5.2, width = 6, units = 'in', res = 1200)
+tiff("fig4_pub2.tiff", height = 4507, width = 5200, units = 'px', res = 800, compression = "lzw")
 plot(fig4)
 dev.off()
 
