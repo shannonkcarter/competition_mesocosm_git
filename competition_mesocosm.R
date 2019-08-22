@@ -772,6 +772,89 @@ tiff("fig4_pub2.tiff", height = 4507, width = 5200, units = 'px', res = 800, com
 plot(fig4)
 dev.off()
 
+
+###---PRESENTATION FIGURES-----------------------------------
+
+## Setup
+# ggtheme with larger fonts suitable for presentations
+pres_theme <- theme_bw(base_size = 17, base_family = "Franklin Gothic Medium") +
+  theme(legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        text = element_text(size = 16),
+        #axis.text.x = element_blank(),
+        #axis.ticks.x = element_blank(),
+        axis.title = element_text(size = 16),
+        axis.text  = element_text(size = 14, family = "Consolas"),
+        panel.grid = element_blank(),
+        strip.text = element_text(size = 16))
+
+# explanatory labels for facet wrapping
+variable_names_abs <- list(
+  'survival' = "proportion survival",
+  'biomass' = "biomass export (mg)",
+  'per capita mass' = "per capita mass (mg)",
+  'mean emergence' = "days to emergence"
+)
+variable_labeller_abs <- function(variable, value){
+  return(variable_names_abs[value])
+}
+
+## Controls
+trt_means2 <- subset(trt_means1, subset = (variable != "s.d. emergence"))
+control_means <- ggplot(subset(trt_means2, subset = (order == 'cont')),
+                        aes(x = sync, y = mean, 
+                            shape = sync, fill = sync, group = sync)) + pres_theme +
+  geom_errorbar(size = 1.5, position = position_dodge(width = 0.2),
+                aes(ymin = mean - se, ymax = mean + se, width = 0, color = sync)) +
+  geom_point(size = 7, position = position_dodge(width = 0.2)) +
+  scale_fill_manual(values = c("#c6dabf", "#66A181", "#2E4058")) +
+  scale_color_manual(values = c("#c6dabf", "#66A181", "#2E4058")) +
+  scale_shape_manual(values = c(21, 24, 23)) +
+  labs(shape = "hatching\nsynchrony", 
+       fill = 'hatching\nsynchrony',
+       color = "hatching\nsynchrony",
+       x = NULL, y = "mean +/- standard error") +
+  facet_wrap(~ variable, nrow = 2, scales = 'free', 
+             #labeller = label_wrap_gen(width = 12, multi_line = T), 
+             labeller = variable_labeller_abs) +
+  theme(legend.position = "none")
+control_means
+ggsave("exp_controls.tiff")
+
+## Treatments
+trt_means <- ggplot(subset(trt_means2, subset = (order != 'cont')),
+                        aes(x = order, y = adj, 
+                            shape = sync, fill = sync, color = sync, group = sync)) + pres_theme +
+  geom_hline(aes(yintercept = 0), linetype = "dashed") +
+  geom_line(size = 1) +
+  geom_errorbar(size = 1.2, position = position_dodge(width = 0.2),
+                aes(ymin = adj - se, ymax = adj + se, width = 0, color = sync)) +
+  geom_point(size = 5, color = "black", position = position_dodge(width = 0.2)) +
+  scale_fill_manual(values = c("#c6dabf", "#66A181", "#2E4058")) +
+  scale_color_manual(values = c("#c6dabf", "#66A181", "#2E4058")) +
+  scale_shape_manual(values = c(21, 24, 23)) +
+  labs(shape = "hatching\nsynchrony", 
+       fill = 'hatching\nsynchrony',
+       color = "hatching\nsynchrony",
+       x = "Mean Hyla hatching (relative to Rana)", y = "mean +/- standard error") +
+  facet_wrap(~ variable, nrow = 2, scales = 'free', 
+             #labeller = label_wrap_gen(width = 12, multi_line = T), 
+             labeller = variable_labeller_abs)
+trt_means
+ggsave("exp_trt.tiff")
+
+## Emergence boxplot
+box <- ggplot(ind_results, aes(x = order, y = date, color = sync, fill = sync)) + pres_theme +
+  geom_boxplot(size = 1, alpha = 0.65, position = position_dodge(0.85)) +
+  scale_fill_manual(values = c("#c6dabf", "#66A181", "#2E4058")) +
+  scale_color_manual(values = c("#c6dabf", "#66A181", "#2E4058")) +
+  labs(fill = 'hatching\nsynchrony', color = 'hatching\nsynchrony') +
+  ylab('date of emergence') + xlab('mean Hyla hatching (relative to Rana)') +
+  coord_flip() + 
+  scale_x_discrete(limits = rev(levels(ind_results$order)))
+box
+ggsave("boxplot.tiff")
+
 #############################################################
 #############################################################
 ###-----------------------ANALYSIS------------------------###
